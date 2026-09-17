@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "course-intro-demo",
+    "slug": "course-intro-demo",
+    "scheme":"courseintrodemo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#f4efe6"
+    },
+    "android": {
+      "package": "ca.nait.sdev2171.courseintrodemo"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
