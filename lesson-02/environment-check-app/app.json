@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "environment-check-app",
+    "slug": "environment-check-app",
+    "scheme":"environmentcheckapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#f6f0e9"
+    },
+    "android": {
+      "package": "ca.nait.sdev2171.environmentcheckapp"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
