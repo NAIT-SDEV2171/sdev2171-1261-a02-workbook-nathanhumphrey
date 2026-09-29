@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import StatePreviewCard from '../components/StatePreviewCard';
+import SimpleComponent from '../components/SimpleComponent';
 
 export default function DetailsScreen() {
   const router = useRouter();
@@ -26,6 +27,10 @@ export default function DetailsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* Demo use of simple component rendering children */}
+      <SimpleComponent>
+        <Text>Child text</Text>
+      </SimpleComponent>
       <View style={styles.container}>
         <Text style={styles.eyebrow}>Parent route</Text>
         <Text style={styles.title}>State And Props Screen</Text>
