@@ -1,20 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, TextInput, Image, Button, Pressable } from 'react-native';
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, useRouter } from "expo-router";
+import { Button, StyleSheet, Text, View, ScrollView, TextInput, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+// import { Link, useRouter } from 'expo-router';
+import NavLink from "../components/NavLink";
+import Header from "../components/header/Header";
 
 export default function Home() {
 
-  const router = useRouter();
+  // const router = useRouter();
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View>
-          <Image style={styles.appImage} source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }} />
-          <Text style={styles.title}>Application Name</Text>
-        </View>
+        {/* Reusable component */}
+        <Header />
         <View style={styles.card}>
           <Text style={styles.card.title}>Card Title</Text>
           <Text style={styles.card.body}>Card body text</Text>
@@ -29,11 +29,14 @@ export default function Home() {
             placeholder="Type whatever you like here"
             placeholderTextColor="grey"></TextInput>
         </View>
-        <Button style={{backgroundColor: "#F00"}} title="Go to Details" onPress={() => router.navigate('/details')} />
-        <Link style={{backgroundColor: "#F00"}} href="/details">Go to Details</Link>
-        <Pressable style={{backgroundColor: "#F00"}} onPress={() => router.navigate('/details')}>
+        {/* <Button style={{ backgroundColor: '#f00' }} title="Go to Details" onPress={() => router.navigate('/details')} />
+        <Link style={{ backgroundColor: '#f00' }} href="/details">
+          Go to Details
+        </Link>
+        <Pressable style={{ backgroundColor: 'rgb(6, 56, 68)' }} onPress={() => router.navigate('/details')}>
           <Text>Go to Details</Text>
-        </Pressable>
+        </Pressable> */}
+        <NavLink href="/details">Details Page</NavLink>
       </ScrollView>
     </SafeAreaView>
   );
@@ -43,16 +46,11 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: 'rgb(178, 248, 253)',
-    alignItems: 'center',
+    alignItems: 'stretch',
   },
   scrollContent: {
-    padding: 8,
-  },
-  appImage: {
-    height: 80,
-    width: 80,
-    alignSelf: 'center',
-    marginBottom: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   title: {
     alignSelf: 'center',
