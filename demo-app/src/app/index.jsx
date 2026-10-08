@@ -46,6 +46,7 @@ export default function Home() {
         </Pressable> */}
         <NavLink href="/details">Details Page</NavLink>
         <NavLink href="/list-demo">List Demo Page</NavLink>
+        <NavLink href="/fetch-list">Fetch Demo Page</NavLink>
       </ScrollView>
     </SafeAreaView>
   );
