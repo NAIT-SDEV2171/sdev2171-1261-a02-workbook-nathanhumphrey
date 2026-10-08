@@ -135,3 +135,6 @@ dist
 # Finder (MacOS) folder config
 .DS_Store
 _MACOSX
+
+# Build artifacts
+android/
