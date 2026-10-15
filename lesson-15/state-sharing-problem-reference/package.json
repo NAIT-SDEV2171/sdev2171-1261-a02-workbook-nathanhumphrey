@@ -1,12 +1,11 @@
 {
-  "name": "loading-error-reference",
+  "name": "state-sharing-problem-reference",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
     "@expo/ui": "~56.0.15",
     "expo": "~56.0.8",
     "expo-constants": "~56.0.16",
-    "expo-dev-client": "~56.0.27",
     "expo-device": "~56.0.4",
     "expo-font": "~56.0.5",
     "expo-glass-effect": "~56.0.4",
@@ -38,8 +37,8 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android:dev": "expo run:android",
     "ios:dev": "expo run:ios",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint"
   },

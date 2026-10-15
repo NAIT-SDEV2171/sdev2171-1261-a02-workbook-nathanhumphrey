@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { getApiBaseUrl } from '../lib/apiBaseUrl';
 
 export default function DetailsScreen() {
@@ -17,13 +24,15 @@ export default function DetailsScreen() {
 
     try {
       const endpoint = simulateError
-        ? `${getApiBaseUrl()}/study-steps?delay=1200&error=1`
-        : `${getApiBaseUrl()}/study-steps?delay=1200`;
+        ? `${getApiBaseUrl()}/study-steps?delay=3000&error=1`
+        : `${getApiBaseUrl()}/study-steps?delay=3000`;
       const response = await fetch(endpoint);
 
       if (!response.ok) {
         const errorBody = await response.json();
-        throw new Error(errorBody.error ?? `Response status: ${response.status}`);
+        throw new Error(
+          errorBody.error ?? `Response status: ${response.status}`,
+        );
       }
 
       const data = await response.json();
@@ -55,15 +64,19 @@ export default function DetailsScreen() {
         <Text style={styles.eyebrow}>Request-state route</Text>
         <Text style={styles.title}>Loading And Error Screen</Text>
         <Text style={styles.body}>
-          This detail screen fetches study-step data from the local lesson backend and shows three visible request
-          states: loading, success, and error.
+          This detail screen fetches study-step data from the local lesson
+          backend and shows three visible request states: loading, success, and
+          error.
         </Text>
 
         <View style={styles.buttonRow}>
           <Pressable style={styles.button} onPress={() => loadRemoteSteps()}>
             <Text style={styles.buttonLabel}>Reload entries</Text>
           </Pressable>
-          <Pressable style={styles.secondaryAction} onPress={() => loadRemoteSteps({ simulateError: true })}>
+          <Pressable
+            style={styles.secondaryAction}
+            onPress={() => loadRemoteSteps({ simulateError: true })}
+          >
             <Text style={styles.secondaryActionLabel}>Simulate error</Text>
           </Pressable>
         </View>
@@ -72,7 +85,10 @@ export default function DetailsScreen() {
           <View style={styles.stateCard}>
             <ActivityIndicator size="large" color="#8c5d35" />
             <Text style={styles.stateTitle}>Loading study steps...</Text>
-            <Text style={styles.stateBody}>The local backend response is delayed on purpose so the loading state is visible.</Text>
+            <Text style={styles.stateBody}>
+              The local backend response is delayed on purpose so the loading
+              state is visible.
+            </Text>
           </View>
         ) : errorMessage ? (
           <View style={styles.errorCard}>
@@ -84,8 +100,12 @@ export default function DetailsScreen() {
           </View>
         ) : remoteSteps.length === 0 ? (
           <View style={styles.emptyStateCard}>
-            <Text style={styles.emptyStateTitle}>No study steps were returned.</Text>
-            <Text style={styles.emptyStateBody}>The request succeeded, but the data list is empty.</Text>
+            <Text style={styles.emptyStateTitle}>
+              No study steps were returned.
+            </Text>
+            <Text style={styles.emptyStateBody}>
+              The request succeeded, but the data list is empty.
+            </Text>
           </View>
         ) : (
           <View style={styles.listCard}>
