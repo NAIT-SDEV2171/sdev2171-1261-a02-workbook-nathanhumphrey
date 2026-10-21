@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Context State Reference",
+    "slug": "context-state-reference",
+    "scheme": "contextstatereference",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#f5efe7"
+    },
+    "android": {
+      "package": "ca.nait.sdev2171.contextstatereference"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
