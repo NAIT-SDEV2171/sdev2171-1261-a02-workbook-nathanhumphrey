@@ -6,8 +6,9 @@ export default function HeaderText({ children }) {
 
 const styles = StyleSheet.create({
     header: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
+        textAlign: 'center',
     }
 });

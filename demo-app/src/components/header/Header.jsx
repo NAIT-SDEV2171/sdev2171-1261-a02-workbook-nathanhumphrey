@@ -3,7 +3,7 @@ import HeaderText from './HeaderText';
 
 const Header = () => {
   return (
-    <View>
+    <View style={{ alignItems: 'center', marginVertical: 16 }}>
       <Image
         style={styles.appImage}
         source={{ uri: 'https://reactnative.dev/img/tiny_logo.png' }}
