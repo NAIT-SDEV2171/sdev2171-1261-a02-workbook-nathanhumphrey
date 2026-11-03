@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "id": "user_seed_001",
+      "name": "Student One",
+      "email": "student1@example.com",
+      "passwordHash": "$2b$10$GVInFO08JqfkxiqvlsCpfe/KVApLud1JvtpUoLi18B1ix9Ng/Xmke",
+      "createdAt": "2026-03-01T12:00:00.000Z"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-101",
+      "label": "Review the route structure before coding."
+    },
+    {
+      "id": "step-102",
+      "label": "Explain where auth state should live."
+    },
+    {
+      "id": "step-103",
+      "label": "Attach the bearer token to one protected request."
+    },
+    {
+      "id": "step-104",
+      "label": "Confirm protected routes redirect after logout."
+    }
+  ]
+}
