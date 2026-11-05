@@ -3,7 +3,6 @@ import { Platform } from 'react-native';
 const DEVICE_LAN_BASE_URL = 'http://192.168.1.50:3000';
 
 export function getApiBaseUrl() {
-  return 'http://10.0.0.18:3000';
   if (Platform.OS === 'android') {
     return 'http://10.0.2.2:3000';
   }

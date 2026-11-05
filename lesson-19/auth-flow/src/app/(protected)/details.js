@@ -1,42 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useStudyPlan } from '../../context/StudyPlanContext';
 import { useAuth } from '../../context/AuthContext';
-import { authorizedGet, meRequest } from '../../lib/authApi';
+import { useStudySteps } from '../../context/StudyStepsContext';
+// import { authorizedGet, meRequest } from '../../lib/authApi';
 
 export default function DetailsScreen() {
   const router = useRouter();
-  const { authToken, currentUser, signOut } = useAuth();
+  const { currentUser, signOut } = useAuth();
+  const { steps, isLoading, errorMessage, profile } = useStudySteps();
+
   const { selectedSteps, toggleStep } = useStudyPlan();
-  const [remoteSteps, setRemoteSteps] = useState([]);
-  const [profileName, setProfileName] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  async function loadProtectedData() {
-    setIsLoading(true);
-    setErrorMessage('');
-
-    try {
-      const [profileBody, steps] = await Promise.all([
-        meRequest(authToken),
-        authorizedGet('/study-steps?delay=700', authToken),
-      ]);
-
-      setProfileName(profileBody.user.name);
-      setRemoteSteps(steps);
-    } catch (error) {
-      console.error('protected request failed', error);
-      setErrorMessage(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    loadProtectedData();
-  }, []);
 
   function renderStep({ item }) {
     const isSelected = selectedSteps.some((entry) => entry.id === item.id);
@@ -46,11 +28,18 @@ export default function DetailsScreen() {
         <View style={styles.stepTextColumn}>
           <Text style={styles.stepLabel}>{item.label}</Text>
           <Text style={styles.stepNote}>
-            {isSelected ? 'Selected in shared state' : 'Available after protected fetch'}
+            {isSelected
+              ? 'Selected in shared state'
+              : 'Available after protected fetch'}
           </Text>
         </View>
-        <Pressable style={isSelected ? styles.removeChip : styles.addChip} onPress={() => toggleStep(item)}>
-          <Text style={isSelected ? styles.removeChipLabel : styles.addChipLabel}>
+        <Pressable
+          style={isSelected ? styles.removeChip : styles.addChip}
+          onPress={() => toggleStep(item)}
+        >
+          <Text
+            style={isSelected ? styles.removeChipLabel : styles.addChipLabel}
+          >
             {isSelected ? 'Remove' : 'Add'}
           </Text>
         </Pressable>
@@ -64,24 +53,30 @@ export default function DetailsScreen() {
         <Text style={styles.eyebrow}>Protected route</Text>
         <Text style={styles.title}>Authenticated Study Steps</Text>
         <Text style={styles.body}>
-          This route stays behind login. The screen makes two protected requests: one to confirm the current user and
-          one to fetch the same study-step shape the class used in earlier lessons.
+          This route stays behind login. The screen makes two protected
+          requests: one to confirm the current user and one to fetch the same
+          study-step shape the class used in earlier lessons.
         </Text>
 
         <View style={styles.summaryCard}>
           <Text style={styles.summaryLabel}>Current signed-in user</Text>
-          <Text style={styles.summaryValue}>{profileName || currentUser?.name || 'Unknown user'}</Text>
+          <Text style={styles.summaryValue}>
+            {profile?.profileName || currentUser?.name || 'Unknown user'}
+          </Text>
           <Text style={styles.summaryBody}>
-            The token from login is attached to `GET /auth/me` so the backend can identify the user.
+            The token from login is attached to `GET /auth/me` so the backend
+            can identify the user.
           </Text>
         </View>
 
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Current auth-driven selection count</Text>
+          <Text style={styles.summaryLabel}>
+            Current auth-driven selection count
+          </Text>
           <Text style={styles.summaryValue}>{selectedSteps.length}</Text>
           <Text style={styles.summaryBody}>
-            Authentication changes route access. Shared Context still owns the selected-step feature once the user is
-            inside the protected area.
+            Authentication changes route access. Shared Context still owns the
+            selected-step feature once the user is inside the protected area.
           </Text>
         </View>
 
@@ -94,11 +89,19 @@ export default function DetailsScreen() {
     return (
       <View style={styles.footerContent}>
         <View style={styles.buttonRow}>
-          <Pressable style={styles.button} onPress={() => router.push('/(protected)/session-form')}>
+          <Pressable
+            style={styles.button}
+            onPress={() => router.push('/(protected)/session-form')}
+          >
             <Text style={styles.buttonLabel}>Open existing feature flow</Text>
           </Pressable>
-          <Pressable style={styles.secondaryAction} onPress={() => loadProtectedData()}>
-            <Text style={styles.secondaryActionLabel}>Reload protected data</Text>
+          <Pressable
+            style={styles.secondaryAction}
+            onPress={() => loadProtectedData()}
+          >
+            <Text style={styles.secondaryActionLabel}>
+              Reload protected data
+            </Text>
           </Pressable>
         </View>
 
@@ -121,8 +124,12 @@ export default function DetailsScreen() {
         <View style={styles.container}>
           <View style={styles.stateCard}>
             <ActivityIndicator size="large" color="#8c5d35" />
-            <Text style={styles.stateTitle}>Loading protected route data...</Text>
-            <Text style={styles.stateBody}>Both `/auth/me` and `/study-steps` depend on the bearer token.</Text>
+            <Text style={styles.stateTitle}>
+              Loading protected route data...
+            </Text>
+            <Text style={styles.stateBody}>
+              Both `/auth/me` and `/study-steps` depend on the bearer token.
+            </Text>
           </View>
         </View>
       ) : errorMessage ? (
@@ -130,14 +137,14 @@ export default function DetailsScreen() {
           <View style={styles.errorCard}>
             <Text style={styles.stateTitle}>Protected request failed</Text>
             <Text style={styles.stateBody}>{errorMessage}</Text>
-            <Pressable style={styles.button} onPress={() => loadProtectedData()}>
+            <Pressable style={styles.button} onPress={() => true}>
               <Text style={styles.buttonLabel}>Try again</Text>
             </Pressable>
           </View>
         </View>
       ) : (
         <FlatList
-          data={remoteSteps}
+          data={steps}
           keyExtractor={(item) => item.id}
           renderItem={renderStep}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -145,8 +152,12 @@ export default function DetailsScreen() {
           ListFooterComponent={renderFooter}
           ListEmptyComponent={
             <View style={styles.emptyStateCard}>
-              <Text style={styles.emptyStateTitle}>No study steps were returned.</Text>
-              <Text style={styles.emptyStateBody}>The auth request succeeded, but the protected list is empty.</Text>
+              <Text style={styles.emptyStateTitle}>
+                No study steps were returned.
+              </Text>
+              <Text style={styles.emptyStateBody}>
+                The auth request succeeded, but the protected list is empty.
+              </Text>
             </View>
           }
           style={styles.list}
