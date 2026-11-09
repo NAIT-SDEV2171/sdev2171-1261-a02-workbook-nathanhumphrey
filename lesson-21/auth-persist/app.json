@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Session Persistence Reference",
+    "slug": "session-persistence-reference",
+    "scheme": "sessionpersistencereference",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "plugins": ["expo-secure-store"],
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#f5efe7"
+    },
+    "android": {
+      "package": "ca.nait.sdev2171.sessionpersistencereference"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

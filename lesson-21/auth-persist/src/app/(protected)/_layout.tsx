@@ -1,0 +1,22 @@
+import { Redirect, Stack } from 'expo-router';
+import { useAuth } from '../../context/AuthContext';
+
+export default function ProtectedLayout() {
+  const { isAuthenticated, isRestoring } = useAuth();
+
+  if (isRestoring) {
+    return null;
+  }
+
+  if (!isAuthenticated) {
+    return <Redirect href="/(public)/login" />;
+  }
+
+  return (
+    <Stack>
+      <Stack.Screen name="details" options={{ title: 'Protected Details' }} />
+      <Stack.Screen name="session-form" options={{ title: 'Session Form' }} />
+      <Stack.Screen name="plan" options={{ title: 'Protected Plan' }} />
+    </Stack>
+  );
+}
