@@ -1,13 +1,11 @@
-import {createContext, useContext, useState} from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const SampleContext = createContext();
 
 export const SampleProvider = ({ children }) => {
   const [counter, setCounter] = useState(0);
   return (
-    <SampleContext value={{ counter, setCounter }}>
-      {children}
-    </SampleContext>
+    <SampleContext value={{ counter, setCounter }}>{children}</SampleContext>
   );
 };
 
