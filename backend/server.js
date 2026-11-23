@@ -9,7 +9,7 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'lesson-19-local-secret';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '5m';
 const DATA_FILE = path.join(__dirname, 'study-steps.json');
 
 app.use(cors());
@@ -25,7 +25,9 @@ async function writeDb(db) {
 }
 
 function normalizeEmail(email) {
-  return String(email || '').trim().toLowerCase();
+  return String(email || '')
+    .trim()
+    .toLowerCase();
 }
 
 function toSafeUser(user) {
@@ -46,7 +48,7 @@ function createToken(user) {
     JWT_SECRET,
     {
       expiresIn: JWT_EXPIRES_IN,
-    }
+    },
   );
 }
 
@@ -80,15 +82,20 @@ app.post('/auth/register', async (req, res) => {
 
     if (!trimmedName || !normalizedEmail || trimmedPassword.length < 8) {
       return res.status(400).json({
-        error: 'Name, email, and a password with at least 8 characters are required',
+        error:
+          'Name, email, and a password with at least 8 characters are required',
       });
     }
 
     const db = await readDb();
-    const existingUser = db.users.find((user) => normalizeEmail(user.email) === normalizedEmail);
+    const existingUser = db.users.find(
+      (user) => normalizeEmail(user.email) === normalizedEmail,
+    );
 
     if (existingUser) {
-      return res.status(409).json({ error: 'An account with that email already exists' });
+      return res
+        .status(409)
+        .json({ error: 'An account with that email already exists' });
     }
 
     const passwordHash = await bcrypt.hash(trimmedPassword, 10);
@@ -124,13 +131,18 @@ app.post('/auth/login', async (req, res) => {
     }
 
     const db = await readDb();
-    const user = db.users.find((entry) => normalizeEmail(entry.email) === normalizedEmail);
+    const user = db.users.find(
+      (entry) => normalizeEmail(entry.email) === normalizedEmail,
+    );
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    const isPasswordMatch = await bcrypt.compare(trimmedPassword, user.passwordHash);
+    const isPasswordMatch = await bcrypt.compare(
+      trimmedPassword,
+      user.passwordHash,
+    );
 
     if (!isPasswordMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
@@ -182,10 +194,14 @@ app.get('/study-steps', authMiddleware, async (req, res) => {
 app.get('/study-steps/:id', authMiddleware, async (req, res) => {
   try {
     const db = await readDb();
-    const step = db.steps.find((entry) => String(entry.id) === String(req.params.id));
+    const step = db.steps.find(
+      (entry) => String(entry.id) === String(req.params.id),
+    );
 
     if (!step) {
-      return res.status(404).json({ error: `No study step found for id ${req.params.id}` });
+      return res
+        .status(404)
+        .json({ error: `No study step found for id ${req.params.id}` });
     }
 
     return res.status(200).json(step);
