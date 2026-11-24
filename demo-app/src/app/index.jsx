@@ -24,6 +24,7 @@ export default function Home() {
         <NavButton href="/context-demo">Context Demo Page</NavButton>
         <NavButton href="/(protected)/study-steps">Study-Steps Page</NavButton>
         <NavButton href="/login">Auth Demo Login Page</NavButton>
+        <NavButton href="/camera">Camera Demo Page</NavButton>
       </ScrollView>
     </Screen>
   );
