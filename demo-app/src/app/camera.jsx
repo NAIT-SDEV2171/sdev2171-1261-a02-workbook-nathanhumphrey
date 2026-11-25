@@ -128,7 +128,7 @@ export default function Details() {
     }
 
     if (cameraPermission.granted) {
-      return 'The camera launch path is available. Keep the preview card visible so you can still prove the granted path.';
+      return 'The camera launch path is available.';
     }
 
     if (cameraPermission.status === 'undetermined') {
@@ -136,10 +136,10 @@ export default function Details() {
     }
 
     if (cameraPermission.canAskAgain) {
-      return 'The user can still retry the permission request. Show that action clearly instead of pretending the camera can already open.';
+      return 'The user can still retry the permission request.';
     }
 
-    return 'The system is no longer offering the permission prompt right now. Explain that state honestly instead of looping the same request.';
+    return 'The system is no longer offering the permission prompt.';
   }
 
   // If the user has denied camera access and cannot be prompted again, we can
