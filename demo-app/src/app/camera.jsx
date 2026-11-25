@@ -1,19 +1,85 @@
 import { useEffect, useState } from 'react';
 // import Alert and Linking for opening the device settings if the user has denied
 // camera access and cannot be prompted again.
-import { Alert, Image, Linking, StyleSheet, Text, ScrollView } from 'react-native';
+import { Alert, FlatList, Image, Linking, StyleSheet, Text, ScrollView, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+
+import * as MediaLibrary from 'expo-media-library';
+
 import Screen from '../components/Screen';
 import Card from '../components/Card';
 import TextButton from '../components/TextButton';
 
+const ALBUM_NAME = 'CameraDemoAlbum';
+
 export default function Details() {
+  // Added for media library support
+  const [assets, setAssets] = useState([]);
+  const [album, setAlbum] = useState(null);
+  const [albumTitle, setAlbumTitle] = useState('');
+  const [albumMessage, setAlbumMessage] = useState('Checking current album state...');
+
   const [capturedImageUri, setCapturedImageUri] = useState('');
   const [cameraPermission, setCameraPermission] = useState(null);
   const [cameraMessage, setCameraMessage] = useState(
     'Checking current camera permission state...',
   );
   const [showSettings, setShowSettings] = useState(false);
+
+  // check if the album exists and create it if it doesn't. Then get the assets in the album.
+  async function getAlbum() {
+    try {
+      const permission = await MediaLibrary.requestPermissionsAsync();
+
+      let album = null;
+      if (!permission.granted) {
+        setAlbumMessage('Media library permission not granted');
+        return;
+      }
+      // Check if the album already exists
+      album = await MediaLibrary.Album.get(ALBUM_NAME);
+      if (album) {
+        setAlbumMessage('Album created or found');
+
+        setAlbum(album);
+        setAlbumTitle(await album.getTitle());
+
+        setAlbumMessage('Retrieving album assets...');
+        const albumAssets = await album.getAssets();
+        setAssets(albumAssets);
+      }
+    } catch (error) {
+      setAlbumMessage('Error requesting media library permissions');
+      console.error('Error requesting media library permissions', error);
+    }
+  };
+
+  // add a new image asset to the album and refresh the list of assets
+  async function addAssetToAlbum(uri) {
+    try {
+      const asset = await MediaLibrary.Asset.create(uri);
+      if (!album) {
+        try {
+          const tempAlbum = await MediaLibrary.Album.create(ALBUM_NAME, asset, false);
+          setAlbum(tempAlbum);
+          setAlbumTitle(await tempAlbum.getTitle());
+        } catch (error) {
+          console.error('Error creating album', error);
+          setAlbumMessage('Error creating album');
+          return;
+        }
+      } else {
+        await album.add(asset);
+      }
+
+      setAlbumMessage('Asset added to album');
+      const albumAssets = await album.getAssets();
+      setAssets(albumAssets);
+    } catch (error) {
+      setAlbumMessage('Error adding asset to album');
+      console.error('Error adding asset to album', error);
+    }
+  }
 
   // confirm current camera state
   async function syncCameraPermission() {
@@ -98,6 +164,14 @@ export default function Details() {
 
     setCapturedImageUri(result.assets[0].uri);
     setCameraMessage('Photo captured and preview updated from local screen state.');
+
+    // add the captured image to the album
+    try {
+      await addAssetToAlbum(result.assets[0].uri);
+    } catch (error) {
+      console.error('Error adding captured image to album', error);
+      setAlbumMessage('Error adding captured image to album');
+    }
   }
 
   // The permission label is a short summary of the current camera permission state.
@@ -159,6 +233,8 @@ export default function Details() {
   useEffect(() => {
     // check camera permissions
     syncCameraPermission();
+    // get the current album and its assets, if any
+    getAlbum();
   }, []);
 
   return (
@@ -168,7 +244,7 @@ export default function Details() {
         contentContainerStyle={styles.scrollContent}
         style={{ alignSelf: 'stretch' }}
       >
-        <Card style={styles.card}>
+        <Card>
           <Text style={styles.title}>Image Preview</Text>
           {/* Show the captured image or a message if no image is available. */}
           {capturedImageUri ? (
@@ -187,7 +263,7 @@ export default function Details() {
             <Text style={styles.body}>{cameraMessage}</Text>
           )}
         </Card>
-        <Card style={styles.card}>
+        <Card>
           <Text style={styles.title}>Permission Status</Text>
           <Text style={styles.body}>{getPermissionLabel()}</Text>
           <Text style={styles.body}>{getPermissionGuidance()}</Text>
@@ -217,6 +293,27 @@ export default function Details() {
           <Text style={{ color: '#fff' }}>Refresh permissions</Text>
         </TextButton>
 
+        <Card>
+          <Text style={styles.title}>Album State</Text>
+          <Text style={styles.body}>{albumMessage}</Text>
+          {album && (
+            <>
+              <Text style={styles.body}>Album title: {albumTitle}</Text>
+              <Text style={styles.body}>Number of assets: {assets.length}</Text>
+            </>
+          )}
+          {/* List the assets in the album, if any. Show a message if there are no assets. */}
+          {assets.length > 0 ? (
+            assets.map(async (asset) => (
+              <View key={asset.id} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                <Image source={{ uri: await asset.getUri() }} style={{ width: 50, height: 50, marginRight: 8 }} />
+                <Text>{await asset.getFilename()}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.body}>No assets in the album.</Text>
+          )}
+        </Card>
       </ScrollView>
     </Screen>
   );
